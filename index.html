@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>brotel.ms</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <section id="loginScreen" class="login-screen">
+      <form id="loginForm" class="login-card">
+        <div class="brand login-brand">
+          <div class="brand-mark">BM</div>
+          <div>
+            <strong>brotel.ms</strong>
+            <span>Secure household expense access</span>
+          </div>
+        </div>
+        <h1>Sign in</h1>
+        <label>Username <input id="loginUsername" autocomplete="username" required></label>
+        <label>Password <input id="loginPassword" type="password" autocomplete="current-password" required></label>
+        <button class="primary-btn">Login</button>
+        <p id="loginMessage" class="form-message"></p>
+      </form>
+    </section>
+
+    <div class="app-shell is-hidden">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">BM</div>
+          <div>
+            <strong>brotel.ms</strong>
+            <span>Shared expense control</span>
+          </div>
+        </div>
+
+        <div class="role-switch" aria-label="Choose panel">
+          <button class="role-tab is-active" data-role="admin">Admin</button>
+          <button class="role-tab" data-role="user">User</button>
+        </div>
+
+        <nav class="nav-list" id="adminNav" aria-label="Admin sections">
+          <button class="nav-item is-active" data-view="admin-dashboard">Dashboard</button>
+          <button class="nav-item" data-view="people">People</button>
+          <button class="nav-item" data-view="expenses">Expenses</button>
+          <button class="nav-item" data-view="payments">Payments</button>
+          <button class="nav-item" data-view="requests">Requests</button>
+          <button class="nav-item" data-view="reports">Reports</button>
+          <button class="nav-item" data-view="settings">Settings</button>
+          <button class="nav-item" data-view="audit">Audit Logs</button>
+          <button class="nav-item" data-view="developer">Developer</button>
+        </nav>
+
+        <nav class="nav-list is-hidden" id="userNav" aria-label="User sections">
+          <button class="nav-item is-active" data-view="user-dashboard">Dashboard</button>
+          <button class="nav-item" data-view="user-expenses">Expense Details</button>
+          <button class="nav-item" data-view="user-payments">Payment History</button>
+          <button class="nav-item" data-view="user-request">Request Payment</button>
+          <button class="nav-item" data-view="developer">Developer</button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="account-chip">
+            <span>Signed in as</span>
+            <strong id="activeAccount">Account</strong>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow" id="panelLabel">Admin Panel</p>
+            <h1 id="pageTitle">Dashboard</h1>
+          </div>
+          <div class="topbar-actions">
+            <label class="search">
+              <span>Search</span>
+              <input type="search" id="globalSearch" placeholder="Name, category, transaction">
+            </label>
+          </div>
+        </header>
+
+        <section id="admin-dashboard" class="view is-active"></section>
+        <section id="people" class="view"></section>
+        <section id="expenses" class="view"></section>
+        <section id="payments" class="view"></section>
+        <section id="requests" class="view"></section>
+        <section id="reports" class="view"></section>
+        <section id="settings" class="view"></section>
+        <section id="audit" class="view"></section>
+        <section id="developer" class="view"></section>
+
+        <section id="user-dashboard" class="view"></section>
+        <section id="user-expenses" class="view"></section>
+        <section id="user-payments" class="view"></section>
+        <section id="user-request" class="view"></section>
+      </main>
+    </div>
+
+    <dialog id="personDialog" class="modal">
+      <form method="dialog" id="personForm">
+        <header>
+          <h2 id="personDialogTitle">Add Person</h2>
+          <button class="icon-btn" type="button" data-action="close-dialog" aria-label="Close">x</button>
+        </header>
+        <input type="hidden" id="personId">
+        <label>Name <input id="personName" required maxlength="60"></label>
+        <label>Phone number <input id="personPhone" maxlength="30"></label>
+        <label>Profile image URL <input id="personImage" type="url" placeholder="https://..."></label>
+        <label>Username <input id="personUsername" required maxlength="40" autocomplete="off"></label>
+        <label>Password <input id="personPassword" type="password" minlength="4" autocomplete="new-password"></label>
+        <menu>
+          <button class="ghost-btn" type="button" data-action="close-dialog">Cancel</button>
+          <button class="primary-btn" id="savePersonBtn" value="default">Save Person</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <dialog id="expenseDialog" class="modal wide">
+      <form method="dialog" id="expenseForm">
+        <header>
+          <h2>Add Expense</h2>
+          <button class="icon-btn" type="button" data-action="close-dialog" aria-label="Close">x</button>
+        </header>
+        <div class="form-grid">
+          <label>Category <select id="expenseCategory" required></select></label>
+          <label>Description <input id="expenseDescription" maxlength="100" placeholder="June WiFi bill"></label>
+          <label>Total amount <input id="expenseAmount" type="number" min="0" step="1" required></label>
+          <label>Date <input id="expenseDate" type="date" required></label>
+          <label>Month <input id="expenseMonth" type="month" required></label>
+          <label>Split mode
+            <select id="splitMode">
+              <option value="equal">Split equally</option>
+              <option value="all-fixed">Add amount to selected profiles</option>
+              <option value="manual">Set manually</option>
+            </select>
+          </label>
+          <label class="check-row"><input id="expenseRecurring" type="checkbox"> Repeat this expense every month</label>
+        </div>
+        <div class="section-head">
+          <h3>Members Sharing This Expense</h3>
+          <button type="button" class="ghost-btn" id="selectAllMembersBtn">Select All</button>
+        </div>
+        <div id="expenseShareGrid" class="share-grid"></div>
+        <menu>
+          <button class="ghost-btn" type="button" data-action="close-dialog">Cancel</button>
+          <button class="primary-btn" id="saveExpenseBtn" value="default">Add Expense</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <dialog id="paymentDialog" class="modal">
+      <form method="dialog" id="paymentForm">
+        <header>
+          <h2>Record Payment</h2>
+          <button class="icon-btn" type="button" data-action="close-dialog" aria-label="Close">x</button>
+        </header>
+        <label>Member <select id="paymentUser" required></select></label>
+        <label>Amount <input id="paymentAmount" type="number" min="1" step="1" required></label>
+        <label>Payment date <input id="paymentDate" type="date" required></label>
+        <label>Method
+          <select id="paymentMethod">
+            <option>Bkash</option>
+            <option>Nagad</option>
+            <option>Hand Cash</option>
+          </select>
+        </label>
+        <label class="method-field digital-field">Transaction ID <input id="paymentTxn" maxlength="80"></label>
+        <label class="method-field cash-field is-hidden">Received by <input id="paymentReceiver" maxlength="60"></label>
+        <label>Admin note <textarea id="paymentNote" rows="3"></textarea></label>
+        <menu>
+          <button class="ghost-btn" type="button" data-action="close-dialog">Cancel</button>
+          <button class="primary-btn" id="savePaymentBtn" value="default">Save Payment</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <dialog id="requestDialog" class="modal">
+      <form method="dialog" id="requestForm">
+        <header>
+          <h2>Submit Payment Request</h2>
+          <button class="icon-btn" type="button" data-action="close-dialog" aria-label="Close">x</button>
+        </header>
+        <input type="hidden" id="requestUser">
+        <label>Amount <input id="requestAmount" type="number" min="1" step="1" required></label>
+        <label>Payment date <input id="requestDate" type="date" required></label>
+        <label>Method
+          <select id="requestMethod">
+            <option>Bkash</option>
+            <option>Nagad</option>
+            <option>Hand Cash</option>
+          </select>
+        </label>
+        <label class="request-digital-field">Transaction ID <input id="requestTxn" maxlength="80"></label>
+        <label class="request-cash-field is-hidden">Received by <input id="requestReceiver" maxlength="60"></label>
+        <label>Note <textarea id="requestNote" rows="3"></textarea></label>
+        <menu>
+          <button class="ghost-btn" type="button" data-action="close-dialog">Cancel</button>
+          <button class="primary-btn" id="submitRequestBtn" value="default">Submit Request</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <dialog id="reviewRequestDialog" class="modal">
+      <form method="dialog" id="reviewRequestForm">
+        <header>
+          <h2>Review Payment Request</h2>
+          <button class="icon-btn" type="button" data-action="close-dialog" aria-label="Close">x</button>
+        </header>
+        <input type="hidden" id="reviewRequestId">
+        <div id="reviewRequestSummary" class="summary-box"></div>
+        <label>Admin notes/comments <textarea id="reviewNote" rows="4"></textarea></label>
+        <menu>
+          <button class="danger-btn" id="rejectRequestBtn" value="default">Reject</button>
+          <button class="primary-btn" id="approveRequestBtn" value="default">Approve</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>
