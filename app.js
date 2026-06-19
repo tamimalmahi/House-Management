@@ -130,6 +130,14 @@ function renderActiveView() {
   renderers[currentView]();
 }
 
+function openMobileMenu() {
+  document.body.classList.add("menu-open");
+}
+
+function closeMobileMenu() {
+  document.body.classList.remove("menu-open");
+}
+
 function renderAdminDashboard() {
   const month = currentMonth();
   const totals = allTotals(month);
@@ -638,7 +646,7 @@ function table(headers, rows) {
     <div class="table-wrap">
       <table>
         <thead><tr>${headers.map((head) => `<th>${escapeHtml(head)}</th>`).join("")}</tr></thead>
-        <tbody>${rows.map((row) => `<tr>${row.map((cell) => `<td>${cellHtml(cell)}</td>`).join("")}</tr>`).join("")}</tbody>
+        <tbody>${rows.map((row) => `<tr>${row.map((cell, index) => `<td data-label="${escapeAttr(headers[index] || "")}">${cellHtml(cell)}</td>`).join("")}</tr>`).join("")}</tbody>
       </table>
     </div>
   `;
@@ -845,11 +853,20 @@ document.addEventListener("click", async (event) => {
 
   if (target.classList.contains("nav-item")) {
     currentView = target.dataset.view;
+    closeMobileMenu();
     render();
     return;
   }
 
   const action = target.dataset.action;
+  if (action === "open-menu") {
+    openMobileMenu();
+    return;
+  }
+  if (action === "close-menu") {
+    closeMobileMenu();
+    return;
+  }
   if (action === "close-dialog") {
     target.closest("dialog")?.close();
     return;
@@ -1110,6 +1127,12 @@ $("#rejectRequestBtn").addEventListener("click", async (event) => {
 });
 
 $("#globalSearch").addEventListener("input", renderActiveView);
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 960) closeMobileMenu();
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeMobileMenu();
+});
 $("#splitMode").addEventListener("change", recalcShares);
 $("#expenseAmount").addEventListener("input", recalcShares);
 $("#expenseShareGrid").addEventListener("input", recalcShares);

@@ -25,8 +25,20 @@
     </section>
 
     <div class="app-shell is-hidden">
+      <div class="sidebar-scrim" data-action="close-menu"></div>
       <aside class="sidebar">
-        <div class="brand">
+        <div class="sidebar-head">
+          <div class="brand">
+            <div class="brand-mark">BM</div>
+            <div>
+              <strong>brotel.ms</strong>
+              <span>Shared expense control</span>
+            </div>
+          </div>
+          <button class="icon-btn menu-close" type="button" data-action="close-menu" aria-label="Close menu">x</button>
+        </div>
+
+        <div class="brand desktop-brand">
           <div class="brand-mark">BM</div>
           <div>
             <strong>brotel.ms</strong>
@@ -69,7 +81,10 @@
 
       <main class="main">
         <header class="topbar">
-          <div>
+          <div class="page-heading">
+            <button class="icon-btn menu-toggle" type="button" data-action="open-menu" aria-label="Open menu">
+              <span></span><span></span><span></span>
+            </button>
             <p class="eyebrow" id="panelLabel">Admin Panel</p>
             <h1 id="pageTitle">Dashboard</h1>
           </div>
