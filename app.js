@@ -617,7 +617,7 @@ function buildWhatsAppReminder(user) {
     "Thank You!",
     "",
     "Brotel Management Team",
-    "brotel.ms"
+    "brotel-ms.onrender.com"
   ].join("\n");
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 }
